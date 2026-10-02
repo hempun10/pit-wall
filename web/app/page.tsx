@@ -1,5 +1,5 @@
 import {groq, seasonQuery, type Race, type Result} from '@/lib/sanity'
-import PitWall from './PitWall'
+import PitWall from '@/components/pit-wall'
 
 export const dynamic = 'force-dynamic'
 

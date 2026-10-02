@@ -42,14 +42,23 @@ Built for the [DEV.to Sanity Challenge](https://dev.to/challenges/sanity-2026-09
 
 ## Repository
 
-| Path | What |
-|---|---|
-| `web/` | Next.js app (UI, API routes, agent) |
-| `studio/` | Sanity Studio and schema |
-| `scripts/f1db_to_ndjson.py` | Converts the F1DB SQLite release into Sanity documents |
-| `scripts/fetch_kb.py` | Downloads the Wikipedia rules articles for the Knowledge Base |
-| `scripts/fill_bank.py` | Pre-writes questions so players never wait |
-| `kb/` | The rules articles as imported (CC BY-SA 4.0) |
+```
+web/                         Next.js app
+  app/                       routes only: page, layout, styles, fonts, api/*
+  components/
+    pit-wall.tsx             which screen is showing (intro, code, menu, race, standings)
+    screens/                 intro, menu, onboarding (driver code), standings
+    race/                    race screen, answers, verdict panel, team radio, timing tower,
+                             start lights, loading, lap progress
+    results/                 results, championship points, finish-line celebrations
+    ui/                      wordmark, icons, flags, answer art, sound toggle
+  hooks/                     use-race (all race logic), use-keydown, use-driver-code
+  lib/                       f1 constants, shared types, browser helpers, Sanity reads, sounds
+    server/                  agent, question bank, answer options, encrypted tokens, standings
+studio/                      Sanity Studio; one schema file per document type in schemaTypes/
+scripts/                     f1db_to_ndjson.py (race data), fetch_kb.py (rules), fill_bank.py
+kb/                          the rules articles as imported (CC BY-SA 4.0)
+```
 
 ## Run it yourself
 

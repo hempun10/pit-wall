@@ -2,7 +2,10 @@ import {createCipheriv, createDecipheriv, createHash, randomBytes} from 'node:cr
 
 // The answer travels with the question, encrypted, so the browser can neither read nor forge it
 // and the server needs no storage.
-const key = () => createHash('sha256').update(process.env.QUIZ_SECRET ?? process.env.OPENAI_API_KEY!).digest()
+const key = () =>
+  createHash('sha256')
+    .update(process.env.QUIZ_SECRET ?? process.env.OPENAI_API_KEY!)
+    .digest()
 
 export function seal(payload: object) {
   const iv = randomBytes(12)

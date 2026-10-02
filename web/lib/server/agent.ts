@@ -2,13 +2,14 @@ import {openai} from '@ai-sdk/openai'
 import {createMCPClient, type MCPClient} from '@ai-sdk/mcp'
 import {generateText, hasToolCall, stepCountIs, tool, type ToolSet} from 'ai'
 import {z} from 'zod'
-import {groq} from './sanity'
+import type {Tyre} from '@/lib/f1'
+import {groq} from '@/lib/sanity'
+import type {Checked} from '@/lib/types'
 
 const MODEL = process.env.OPENAI_MODEL ?? 'gpt-5.4-mini'
 
-export type Tyre = 'soft' | 'medium' | 'hard'
-
-const TYRES: Record<Tyre, string> = {
+// What each tyre asks the agent for
+const DIFFICULTY: Record<Tyre, string> = {
   soft: 'one fact from a single result row of this race (winner, pole sitter, a driver’s finishing position, the winner’s team, pit stops).',
   medium: 'comparing rows within this race (most places gained, teammate battles, number of retirements, best-placed team, who started where).',
   hard: 'aggregating across every completed 2026 race up to and including this round (wins, podiums, retirements, Grand Prix points so far).',
@@ -128,7 +129,7 @@ export async function writeQuestion(opts: {round: number; grandPrix: string; tyr
         system: `${SYSTEM}\n\n${references}`,
         prompt: [
           `Round ${opts.round} of 2026: the ${opts.grandPrix} Grand Prix.`,
-          `Difficulty "${opts.tyre}": ${TYRES[opts.tyre]}`,
+          `Difficulty "${opts.tyre}": ${DIFFICULTY[opts.tyre]}`,
           opts.asked.length ? `Do not repeat these questions:\n- ${opts.asked.join('\n- ')}` : '',
           feedback,
         ].join('\n'),
@@ -163,8 +164,6 @@ Reply to their radio message about the 2026 season in at most three short senten
 - Every fact and number in your reply must come from a tool result in this conversation. If the data cannot answer it, say so. Never guess.
 - Field rules: pole position is polePosition == true; a podium is position <= 3; raceResult.points is Grand Prix points only (no sprints); a pitStops of 0 for a finisher means the stop data is missing.
 - Only talk about F1. For anything else, say you can only talk racing on this channel.`
-
-export type Checked = {kind: 'data' | 'rules'; detail: string}
 
 export async function radio(opts: {round: number; grandPrix: string; message: string; context?: string; signal?: AbortSignal}) {
   const calls: ToolCall[] = []

@@ -1,6 +1,7 @@
 import {randomUUID} from 'node:crypto'
-import {writeQuestion, type Submission, type Tyre} from './agent'
-import {create, groq} from './sanity'
+import type {Tyre} from '@/lib/f1'
+import {create, groq} from '@/lib/sanity'
+import {writeQuestion, type Submission} from './agent'
 
 // Hard ceiling on spend: the agent only writes until each round+tyre holds this many questions.
 // After that every play is served from Sanity at no model cost.

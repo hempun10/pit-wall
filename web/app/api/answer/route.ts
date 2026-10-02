@@ -1,6 +1,7 @@
 import {randomUUID} from 'node:crypto'
-import {LAPS, type Run} from '@/lib/standings'
-import {open, seal} from '@/lib/token'
+import {LAPS} from '@/lib/f1'
+import type {Run} from '@/lib/server/standings'
+import {open, seal} from '@/lib/server/token'
 
 type Sealed = {answer: string; answerQuery: string; qid: string; round: number; tyre: string; issuedAt: number}
 

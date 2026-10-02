@@ -1,7 +1,8 @@
 import {validCode} from '@/lib/codes'
 import {create} from '@/lib/sanity'
-import {LAPS, POINTS, standings, table, type Run} from '@/lib/standings'
-import {open} from '@/lib/token'
+import {LAPS, POINTS} from '@/lib/f1'
+import {standings, table, type Run} from '@/lib/server/standings'
+import {open} from '@/lib/server/token'
 
 const UUID = /^[0-9a-f-]{36}$/
 
@@ -17,7 +18,17 @@ export async function POST(req: Request) {
   const correct = run.laps.filter(Boolean).length
   // runId makes this idempotent: submitting the same finished race twice saves it once
   await create(
-    {_id: `run-${run.runId}`, _type: 'quizRun', playerId: player, code, round: run.round, tyre: run.tyre, correct, points: POINTS[correct], finishedAt: new Date().toISOString()},
+    {
+      _id: `run-${run.runId}`,
+      _type: 'quizRun',
+      playerId: player,
+      code,
+      round: run.round,
+      tyre: run.tyre,
+      correct,
+      points: POINTS[correct],
+      finishedAt: new Date().toISOString(),
+    },
     'createIfNotExists',
   )
   return Response.json({points: POINTS[correct], ...table(await standings(), player)})

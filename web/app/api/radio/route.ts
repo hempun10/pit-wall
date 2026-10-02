@@ -1,4 +1,4 @@
-import {radio} from '@/lib/agent'
+import {radio} from '@/lib/server/agent'
 import {groq} from '@/lib/sanity'
 
 export const maxDuration = 60

@@ -1,8 +1,4 @@
-import {groq} from './sanity'
-
-export const LAPS = 5
-// Correct answers out of 5 score like F1's top five finishers: 25, 18, 15, 12, 10
-export const POINTS = [0, 10, 12, 15, 18, 25]
+import {groq} from '@/lib/sanity'
 
 // Travels between /api/answer calls inside an encrypted token, so the score is the server's, not the browser's
 export type Run = {runId: string; round: number; tyre: string; laps: boolean[]; qids: string[]}

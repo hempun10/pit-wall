@@ -1,4 +1,4 @@
-import {standings, table} from '@/lib/standings'
+import {standings, table} from '@/lib/server/standings'
 
 export async function GET(req: Request) {
   const player = new URL(req.url).searchParams.get('player') ?? undefined
