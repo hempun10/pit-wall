@@ -6,3 +6,4 @@ node_modules
 # F1DB downloads and the generated import file; rebuild with scripts/f1db_to_ndjson.py
 data/
 __pycache__/
+.vercel
