@@ -1,0 +1,313 @@
+@import "tailwindcss";
+
+/* FIA timing sheet: warm paper with film grain, pixel monospace for every label and control,
+   a serif italic for headlines, square edges, and buttons that invert to ink on hover. */
+:root {
+  color-scheme: light;
+  --bg: #ebe7e4;
+  --surface: #e2dcd6;
+  --surface-2: #d6cec6;
+  --separator: rgb(29 28 26 / 0.14);
+  --fg: #1d1c1a;
+  --secondary: #6b655f;
+  --ink: #252f3d;
+  --accent: #d10f0a;
+  --green: #1e7f3c;
+  --red: #c42a1f;
+  --purple: #7a3ccf;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-separator: var(--separator);
+  --color-fg: var(--fg);
+  --color-secondary: var(--secondary);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-green: var(--green);
+  --color-red: var(--red);
+  --color-purple: var(--purple);
+  --font-sans: var(--font-serif), Georgia, serif;
+  --font-pixel: var(--font-pixel), ui-monospace, monospace;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.0625rem;
+}
+
+/* Film grain over everything: our own SVG noise, nudged a few times a second like film */
+body::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(4) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -1%); }
+}
+
+/* Pixel monospace for UI text */
+.pixel,
+.eyebrow,
+.btn-primary,
+.btn-secondary,
+.seg button,
+.key {
+  font-family: var(--font-pixel), ui-monospace, monospace;
+  letter-spacing: 0.06em;
+}
+
+/* Headlines: serif italic, like an editorial title */
+.display {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+/* Buttons: square, thin rule, bracketed label; hover inverts to ink */
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  border: 1px solid var(--fg);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: var(--fg);
+  transition: background 0.12s, color 0.12s, border-color 0.12s, opacity 0.12s;
+}
+.btn-primary::before,
+.btn-secondary::before { content: '['; margin-right: 0.4em; }
+.btn-primary::after,
+.btn-secondary::after { content: ']'; margin-left: 0.4em; }
+.btn-secondary { border-color: rgb(29 28 26 / 0.35); }
+.btn-primary:hover:not(:disabled),
+.btn-secondary:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn-primary:disabled,
+.btn-secondary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Plain text link that inverts on hover, like the site's ENTER */
+.link-invert {
+  font-family: var(--font-pixel), ui-monospace, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2em 0.45em;
+  color: var(--secondary);
+  transition: background 0.12s, color 0.12s;
+}
+.link-invert:hover,
+.link-invert:focus-visible { background: var(--ink); color: var(--bg); outline: none; }
+
+:is(.btn-primary, .btn-secondary, .option, .icon-btn, .seg button):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--fg);
+  transition: background 0.12s, color 0.12s, opacity 0.12s;
+}
+.icon-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+.icon-btn:disabled { opacity: 0.25; }
+
+/* Paper card, slightly darker than the page with a soft lift */
+.card {
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgb(70 50 30 / 0.12);
+}
+
+/* Segmented control */
+.seg {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid rgb(29 28 26 / 0.35);
+}
+.seg button {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  color: var(--secondary);
+  transition: background 0.12s, color 0.12s;
+}
+.seg button + button { border-left: 1px solid rgb(29 28 26 / 0.2); }
+.seg button:hover { color: var(--fg); }
+.seg button[aria-checked='true'] { background: var(--ink); color: var(--bg); }
+
+/* Answer rows */
+.option {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgb(29 28 26 / 0.25);
+  padding: 0 1rem;
+  text-align: left;
+  font-size: 1.1875rem;
+  transition: background 0.12s, border-color 0.12s, opacity 0.2s;
+}
+.option:hover:not(:disabled) { background: rgb(29 28 26 / 0.05); border-color: var(--fg); }
+.option.correct { background: rgb(30 127 60 / 0.1); border: 2px solid var(--green); }
+.option.wrong { background: rgb(196 42 31 / 0.08); border: 2px solid var(--red); }
+.option.dim { opacity: 0.35; }
+
+/* Keyboard hint on each answer, like Typeform: [A] */
+.key {
+  font-size: 0.75rem;
+  color: var(--secondary);
+  transition: color 0.12s;
+}
+.key::before { content: '['; }
+.key::after { content: ']'; }
+.option:hover .key,
+.option:focus-visible .key { color: var(--fg); }
+
+/* The picked answer flashes to ink twice before it's checked */
+@keyframes blink {
+  0%, 50%, 100% { background: transparent; color: var(--fg); }
+  25%, 75% { background: var(--ink); color: var(--bg); }
+}
+.option.blink { animation: blink 0.38s steps(1); border-color: var(--ink); }
+.option:disabled { cursor: default; }
+
+/* Intro: the wordmark sharpens out of the paper, then the enter link appears */
+@keyframes focus-in { from { opacity: 0; filter: blur(8px); letter-spacing: 0.3em; } }
+@keyframes fade-in { from { opacity: 0; } }
+.intro-mark { animation: focus-in 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s both; }
+.intro-enter { animation: fade-in 0.6s ease-out 1.3s both; }
+.chrome { animation: fade-in 0.8s ease-out 0.15s both; }
+
+/* F1 start lights: they come on one by one, then all go out together */
+.lights { display: flex; gap: 10px; }
+.lights span {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #3a1a17;
+  box-shadow: inset 0 0 0 2px #2a1210;
+}
+.lights span:nth-child(1) { animation: light1 2.8s infinite; }
+.lights span:nth-child(2) { animation: light2 2.8s infinite; }
+.lights span:nth-child(3) { animation: light3 2.8s infinite; }
+.lights span:nth-child(4) { animation: light4 2.8s infinite; }
+.lights span:nth-child(5) { animation: light5 2.8s infinite; }
+@keyframes light1 { 0%, 4% { background: #3a1a17; } 5%, 78% { background: #e3150f; box-shadow: 0 0 12px #e3150f; } 79%, 100% { background: #3a1a17; } }
+@keyframes light2 { 0%, 16% { background: #3a1a17; } 17%, 78% { background: #e3150f; box-shadow: 0 0 12px #e3150f; } 79%, 100% { background: #3a1a17; } }
+@keyframes light3 { 0%, 28% { background: #3a1a17; } 29%, 78% { background: #e3150f; box-shadow: 0 0 12px #e3150f; } 79%, 100% { background: #3a1a17; } }
+@keyframes light4 { 0%, 40% { background: #3a1a17; } 41%, 78% { background: #e3150f; box-shadow: 0 0 12px #e3150f; } 79%, 100% { background: #3a1a17; } }
+@keyframes light5 { 0%, 52% { background: #3a1a17; } 53%, 78% { background: #e3150f; box-shadow: 0 0 12px #e3150f; } 79%, 100% { background: #3a1a17; } }
+
+/* Race start gantry, on a black screen */
+.gantry { display: flex; gap: 14px; }
+.gantry span {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: #240909;
+  box-shadow: inset 0 0 0 3px #3b1414;
+  transition: background 0.08s, box-shadow 0.08s;
+}
+.gantry span.on { background: #ff1e1e; box-shadow: 0 0 28px #ff1e1e, inset 0 0 0 3px #ff6a6a; }
+
+/* Chequered flag sweeping across the screen at the finish */
+.chequered {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  width: 40vw;
+  pointer-events: none;
+  background: repeating-conic-gradient(#f4f1ee 0 25%, #1d1c1a 0 50%) 0 0 / 44px 44px;
+  animation: flag 1.1s ease-in-out forwards;
+}
+@keyframes flag {
+  from { transform: translateX(-45vw) skewX(-12deg); }
+  to { transform: translateX(110vw) skewX(-12deg); }
+}
+
+/* Podium champagne */
+.spray {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #c99a12;
+  opacity: 0;
+  animation: spray 1.3s ease-out forwards;
+}
+.spray:nth-child(3n) { background: #e8c547; width: 5px; height: 5px; }
+@keyframes spray {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 60px)) scale(0.4); }
+}
+
+/* Donut smoke for a perfect race */
+.smoke {
+  position: absolute;
+  bottom: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+  background: rgb(60 55 50 / 0.28);
+  filter: blur(18px);
+  opacity: 0;
+  animation: smoke 3.2s ease-out forwards;
+}
+@keyframes smoke {
+  0% { opacity: 0; transform: translateY(20px) scale(0.5); }
+  20% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-120px) scale(2.2); }
+}
+
+/* Team radio waveform, animated while the engineer is talking */
+.wave { display: inline-flex; height: 12px; align-items: center; gap: 2px; }
+.wave i { width: 2px; height: 4px; background: currentColor; }
+.wave.on i { animation: radiowave 0.9s ease-in-out infinite; }
+.wave.on i:nth-child(2) { animation-delay: 0.15s; }
+.wave.on i:nth-child(3) { animation-delay: 0.3s; }
+.wave.on i:nth-child(4) { animation-delay: 0.45s; }
+@keyframes radiowave { 50% { height: 12px; } }
+
+@keyframes appear { from { opacity: 0; transform: translateY(8px); } }
+.appear { animation: appear 0.3s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  .appear, .option.blink, .lights span, .spray, .smoke, .intro-mark, .intro-enter, .chrome { animation: none !important; }
+  .chequered { display: none; }
+  .tower li { transition: none !important; }
+}
